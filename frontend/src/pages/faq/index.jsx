@@ -1,0 +1,450 @@
+import React, { useEffect, useState } from 'react'
+
+import Link from 'next/link'
+import useAxiosInstances from '@/config/AxiosConfig'
+import { catchResponse, removeItem, setItem } from '@/utils/Helper'
+import { Modal } from 'react-bootstrap'
+import { toast } from 'react-toastify'
+import { useRouter } from 'next/navigation'
+import Moment from 'react-moment';
+import Swal from 'sweetalert2';
+import Layout from '../layout/layout'
+
+function Student() {
+  const { axios } = useAxiosInstances()
+  const [data, setData] = useState([])
+  const [course, setCourse] = useState([])
+  const [courseDetail, setCourseDetail] = useState({})
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const [studentId, setStudentId] = useState('')
+
+
+  const [totalPages, setTotalPages] = useState(0)
+  const [page, setPage] = useState(1)
+  const [limit, setLimit] = useState(20) // Default to 10 per page
+
+  const [search, setSearch] = useState({
+    term: "", // Default value for search term
+    start_date: "", // Default value for start date
+    end_date: "",
+    course_id: ""
+    // Default value for end date
+  });
+  const navigate = useRouter()
+
+  useEffect(() => {
+    const body = {
+      page: page,
+      limit: limit
+    }
+    axios.post('/view-faq', body).then((res) => {
+      console.log(res?.data);
+      if (res?.data?.status) {
+        setData(res?.data?.result?.UserList)
+        setTotalPages(res?.data?.result?.totalPages)
+        removeItem('edit_faq_id')
+      }
+    }).catch((err) => {
+      catchResponse(err)
+    })
+  }, [page, limit])
+
+
+  // Handle limit change (increase the limit by 10)
+  const handleLimitIncrease = () => {
+    setLimit(limit + 10)
+    setPage(1) // Reset to the first page when limit changes
+  }
+
+  // Handle limit decrease (decrease the limit by 10)
+  const handleLimitDecrease = () => {
+    if (limit > 10) {
+      setLimit(limit - 10)
+      setPage(1) // Reset to the first page when limit changes
+    }
+  }
+
+  // Handle page change (navigate to the specific page)
+  const handlePageChange = (newPage) => {
+    setPage(newPage)
+  }
+  const handelNavigateUpdate = (e) => {
+    setItem('edit_faq_id', e)
+    navigate.push('/faq/edit')
+  }
+  const handleInput = (e) => {
+    const { name, value } = e.target;
+    setSearch(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
+  };
+
+
+  const handleSearch = (e) => {
+    e.preventDefault()
+    const body = {
+
+      page: page,
+      limit: limit,
+      search: search?.term?.trim(), // Assuming you have a single input field bound to search.term
+      start_date: search?.start_date,
+      end_date: search?.end_date,
+      course_id: search?.course_id,
+    }
+    axios.post('/view-faq', body).then((res) => {
+      if (res?.data?.status) {
+        setData(res?.data?.result?.UserList)
+        setPaginaction({ page: res?.data?.result?.currentPage })
+        setTotalPages(res?.data?.result?.totalPages)
+        removeItem('edit_faq_id')
+      }
+    }).catch((err) => {
+      catchResponse(err)
+    })
+  }
+  const handleReset = (e) => {
+    e.preventDefault()
+    setSearch({
+      term: "", // Default value for search term
+      start_date: "", // Default value for start date
+      end_date: "",
+      course_id: ""
+      // Default value for end date
+    })
+    const body = {
+      page: page,
+      limit: limit,
+    }
+    axios.post('/view-faq', body).then((res) => {
+      if (res?.data?.status) {
+        setData(res?.data?.result?.UserList)
+        setTotalPages(res?.data?.result?.totalPages)
+        removeItem('edit_faq_id')
+      }
+    }).catch((err) => {
+      catchResponse(err)
+    })
+  }
+  const deleteFAQ = async (id) => {
+    console.log("id", id);
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be delete this faq?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!"
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        // Show processing alert
+        Swal.fire({
+          title: "Processing...",
+          text: "Please wait while we delete the batch.",
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          didOpen: () => {
+            Swal.showLoading();
+          },
+        });
+      
+        try {
+          const body = {
+            id: id
+          };
+          // Make the API call
+          const response = await axios.post('/delete-faq', body)
+          Swal.fire({
+            title: "Deleted!",
+            text: response.data.message,
+            icon: "success"
+          });
+          const bodys = {
+            page: page,
+            limit: limit
+          }
+          axios.post('/view-faq', bodys).then((res) => {
+            console.log(res?.data);
+            if (res?.data?.status) {
+              setData(res?.data?.result?.UserList)
+              setTotalPages(res?.data?.result?.totalPages)
+              removeItem('edit_faq_id')
+            }
+          })
+        } catch (error) {
+          // Close the processing alert
+          Swal.close();
+          // Show error alert
+          Swal.fire({
+            title: "Error",
+            text: error.response?.data?.message || "An error occurred while deleting the batch.",
+            icon: "error"
+          });
+        }
+      }
+    });
+  };
+  
+  return (
+    <>
+    <Layout>
+
+
+          <div className="emp_dash">
+            <div className="page_manus">
+              <ul className="text-center mb-2">
+                {/* <li className="nav-item">
+            <a href="index.html" className="deactive-link">Dashboard</a> <span className="active-link">/ Reports</span>
+          </li> */}
+              </ul>
+              <div className="page_heading display">
+                <h4 className="pb-3">FAQ Management</h4>
+              </div>
+            </div>
+            <div className="search_show_entries display justify-content-between mt-4">
+              <div className="  position-relative W-100 display justify-content-between p-4 pt-2 pb-2">
+               
+              </div>
+              <div className="apply_application">
+                <Link href="/faq/add" className="btn comman_btn"><i className="fa fa-plus me-2" />Add FAQ</Link>
+              </div>
+            </div>
+            <div class="row g-2">
+              <div class="col-12">
+{/* 
+                <div class="card mt-4">
+                  <div class="card-body">
+                    <form className='mb-3' onSubmit={handleSearch}>
+                      <div className="row g-3 g-xl-5 g-xxl-5">
+                        <div className="col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-3">
+                          <label htmlFor="father_name" className="form-label">Enter With</label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="father_name"
+                            placeholder="Enter Name/Email/ Mobile..."
+                            onChange={handleInput}
+                            value={search.term}
+                            name="term"
+
+                          />
+
+                        </div>
+                      
+                        <div className="col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-3">
+                          <label htmlFor="dob" className="form-label">Start Date</label>
+                          <input
+                            type="date"
+                            className="form-control"
+                            id="dob"
+                            name="start_date"
+
+                            onChange={handleInput}
+                            value={search.start_date}
+                          />
+
+                        </div>
+
+                        <div className="col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-3">
+                          <label htmlFor="dob" className="form-label">End Date</label>
+                          <input
+                            type="date"
+                            className="form-control"
+                            name="end_date"
+                            onChange={handleInput}
+                            value={search.end_date}
+                            min={search.start_date} />
+
+                        </div>
+                        <div className="col-sm-3 col-md-3 col-lg-3 col-xl-3 col-xxl-3 ">
+                      <div className="btn_block mt-4 d-flex">
+                        <button type="submit" className="Submit_btn btn comman_btn me-3 " >Search</button>
+                        <button type="button" className="cancel-btn btn " onClick={handleReset} >Reset</button>
+                      </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div></div> */}
+
+              </div>
+              <div className='col-12'>
+
+                <div className="punch_table table-responsive mt-4 pt-3">
+                  <table className="table">
+                    <thead>
+                      <tr>
+                        <th>S.NO</th>
+                        <th>Course</th>
+                        <th>Question</th>
+                        <th>Options</th>
+                        <th>Correct Answer</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {data?.length > 0 ? data.map((res, i) => 
+                      
+                      (
+                        
+                        <tr key={i}>
+                          <td>{(page - 1) * limit + (i + 1)}</td>
+                          <td>{res?.Course_details?.name}</td>                          
+                          <td>{res?.question_text}</td>                          
+                          <td>
+  {JSON.parse(res?.options).map((option, index) => (
+    <span key={index}>
+      {option},
+      <br />
+    </span>
+  ))}
+</td>
+                          <td>{res?.correct_answer}</td>
+                          <td class="display">
+                          <td><button className="btn btn-danger" title="Delete" onClick={()=>deleteFAQ(res?.id)} ><i class="fas fa-trash"></i></button></td>
+
+                            <span> <a class="view_btn display" onClick={() => handelNavigateUpdate(res?.id)}  ><i class="fas fa-pencil-alt"></i></a></span>
+                          </td>
+                        </tr>
+                      )) : null}
+                    </tbody>
+
+                  </table>
+                  <div className="search_show_entries display justify-content-between mt-4">
+                    <div className="show_entries display ps-4">
+                      <span className="pe-3">Show Entries</span>
+                      <a onClick={handleLimitDecrease} className="p-2 m-2"><i className="fa fa-minus" /></a> <span className="entries">{limit}</span>
+                      <a onClick={handleLimitIncrease} className="p-2 m-2"><i className="fa fa-plus" /></a>
+                    </div>
+                    <nav aria-label="Page navigation example">
+                      <ul className="pagination justify-content-end">
+                        <li className={`page-item ${page === 1 ? 'disabled' : ''}`}>
+                          <button
+                            className="comman_btn"
+                            tabIndex={page === 1 ? '-1' : ''}
+                            aria-disabled={page === 1}
+                            onClick={() => page > 1 && handlePageChange(page - 1)}
+                          >
+                            Previous
+                          </button>
+                        </li>
+
+                        {/* Dynamic Page Numbers */}
+                        {[...Array(totalPages)].map((_, index) => {
+                          const pageNumber = index + 1
+                          return (
+                            <li className={`page-item ${page === pageNumber ? 'active' : ''}`} key={pageNumber}>
+                              <a className="page-link" onClick={() => handlePageChange(pageNumber)}>
+                                {pageNumber}
+                              </a>
+                            </li>
+                          )
+                        })}
+
+                        {/* Next Button */}
+                        <li className={`page-item ${page === totalPages ? 'disabled' : ''}`}>
+                          <button
+                            className="comman_btn"
+                            tabIndex={page === totalPages ? '-1' : ''}
+                            aria-disabled={page === totalPages}
+                            onClick={() => page < totalPages && handlePageChange(page + 1)}
+                          >
+                            Next
+                          </button>
+                        </li>
+                      </ul>
+                    </nav>
+
+
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+       
+
+          </Layout>
+
+      <Modal show={show} onHide={handleClose}
+              size="sm"
+
+      >
+  <Modal.Header closeButton>
+    <Modal.Title>Assign Course</Modal.Title>
+  </Modal.Header>
+  <Modal.Body>
+    <div className="apply_application_main mt-4">
+      <form action>
+        <div className="row g-3 g-xl-5 g-xxl-5">
+          <div className="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 leave_type">
+            <label htmlFor="leave-type" className="form-label">Course</label>
+            <select
+              className="form-select form-control p-4 pt-0 pb-0"
+              aria-label="Default select example"
+              onChange={(e) => handelSelectCourse(e.target.value)}
+            >
+              <option value="" label="Select course" />
+              {course?.map((res, i) => (
+                <option value={res?.id} key={i}>{res?.name}</option>
+              ))}
+            </select>
+          </div>
+
+          {courseDetail?.name ? (
+            <>
+              <div className="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                <label htmlFor="total_amount" className="form-label">Course Name</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="total_amount"
+                  value={courseDetail?.name || ''}
+                  disabled
+                />
+              </div>
+
+              <div className="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                <label htmlFor="total_amount" className="form-label">Course Fees</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="total_amount"
+                  value={courseDetail?.fees || ''}
+                  disabled
+                />
+              </div>
+
+              <div className="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+                <label htmlFor="total_amount" className="form-label">Course Duration</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="total_amount"
+                  value={courseDetail?.duration || ''}
+                  disabled
+                />
+              </div>
+            </>
+          ) : null}
+
+          <div className="col-12">
+            <div className="btn_block text-center">
+              <a onClick={() => handleClose()} className="cancel-btn btn me-3">Cancel</a>
+              <a onClick={() => handelAssignCourse()} className="Submit_btn btn comman_btn">Submit</a>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </Modal.Body>
+</Modal>
+
+    </>
+  )
+}
+
+export default Student

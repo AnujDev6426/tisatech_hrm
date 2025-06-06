@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <table
+        style="border: 1px solid #000;  max-width: 880px; width: 100%; margin: auto; font-family: Arial, Helvetica, sans-serif; font-size: 14px;"
+        cellspacing="5">
+        <tr>
+            <td style="vertical-align: top; width: 10%;">
+                <img src="https://tisatech.in/assets/images/logo-b.png" width="75px" alt="" style="margin-top:10px;">
+            </td>
+            <td style="text-align: center; width: 70%; font-size: 10px; line-height: 1.2;">
+                <strong style="display: block; font-size: 10px;">FEE RECEIPT</strong>
+                <strong style="font-size: 9px; display: block;">
+                    TISA - TRAINING INSTITUTE FOR SOFTWARE & APPLICATIONS
+                </strong>
+                <span style="font-size: 9px; display: block;">
+                    <span>1<sup>st</sup> FLOOR</span>, 70-71, OPPOSITE HOTEL NARAYAN PALACE, PATEL NAGAR, GOVINDPURA, JAIPUR, RAJ. 302012
+                </span>
+                <div style="text-align: center; margin-top: 5px; line-height: 1.2;">
+                    <span style="display: inline-block; margin-right: 10px;">
+                        <img src='https://cdn-icons-png.flaticon.com/128/1006/1006771.png' style="height: 10px; width: 10px; vertical-align: middle;" />
+                        <span>www.tisatech.in</span>
+                    </span>
+                    <span style="display: inline-block; margin-right: 2px;">
+                        <img src='https://cdn-icons-png.flaticon.com/128/542/542689.png' style="height: 10px; width: 10px; vertical-align: middle;" />
+                        <span>contact@tisatech.in</span>
+                    </span>
+                    <span style="display: inline-block;">
+                        <img src='https://cdn-icons-png.flaticon.com/128/483/483947.png' style="height: 10px; width: 10px; vertical-align: middle;" />
+                        <span>+91 9828080898</span>
+                    </span>
+                </div>
+            </td>
+
+            <td style="width: 20%; text-align: right; vertical-align: top;">
+                <span style="font-size: 7px; display: block;">ISO 9001:2015 Registered</span>
+                <div style="display: inline-block; vertical-align: top; margin-top: 2px;">
+                    <img src="https://www.taxaj.com/files/Images/ISO-e1538996534469.png" style="height: 30px; margin-right: 5px;" />
+                </div>
+                <div style="display: inline-block; vertical-align: top;margin-top:2px;">
+                    <img src="https://3.imimg.com/data3/VI/YK/MY-2425404/jas-anz-certification-services-1000x1000.jpeg" style="height: 30px;" />
+                </div>
+            </td>
+            
+        </tr>
+        
+
+        <tr>
+            <td colspan="3">
+                <table width="100%" style="border-collapse: collapse;">
+                    <tr>
+                        <!-- Left Cell -->
+                        <td style="width: 60%; font-size: 10px; vertical-align: top; padding: 5px;">
+                            <b>Enrollment No.</b>:TISA{{users_detail.userData.dataValues.enrollment_id}}
+                            <br>
+                            <b>Student Name</b>: {{users_detail.userData.dataValues.username}}
+                        </td>
+                        <!-- Right Cell -->
+                        <td style="width: 40%; font-size: 10px; text-align: right; vertical-align: top; padding: 5px;">
+                            <b>Receipt No.</b>: {{users_detail.FeesData.dataValues.id}}
+                            <br>
+                            <b>Date</b>: {{users_detail.FeesDate}}
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            
+        </tr>
+
+        <tr>
+            <td colspan="3">
+                <table style="border: 1px solid #000; width: 100%; font-size: 10px;" cellspacing="0" cellpadding="5">
+                    <tr>
+                        <td style="width: 10%; border-right: 1px solid #000; border-bottom: 1px solid #000;">S.No.
+                        </td>
+                        <td style="width: 70%; border-right: 1px solid #000; border-bottom: 1px solid #000;">Particular
+                        </td>
+                        <td style="width: 20%; border-bottom: 1px solid #000; text-align: right;">Amount</td>
+                    </tr>
+
+                    <tr>
+                        <td
+                            style="height: 100px; width: 10%; border-right: 1px solid #000; border-bottom: 1px solid #000; vertical-align: top;">
+                            1
+                        </td>
+                        <td
+                            style="height: 100px; width: 70%; border-right: 1px solid #000; border-bottom: 1px solid #000; vertical-align: top;">
+                            {{users_detail.CourseData.dataValues.name}}
+                        </td>
+                        <td
+                            style="height: 100px; width: 20%; border-bottom: 1px solid #000; text-align: right; vertical-align: top;">
+                            {{users_detail.FeesData.dataValues.pay_amount}} .00
+                        </td>
+                    </tr>
+                    <tr>
+                        <th colspan="2"
+                            style="text-align: right; border-right: 1px solid #000; border-bottom: 1px solid #000;">
+                            Total</th>
+                        <th style="text-align: right;  border-bottom: 1px solid #000;">{{users_detail.FeesData.dataValues.pay_amount}}.00</th>
+                    </tr>
+                 <tr >
+                    <td style=" padding-top:20px;">
+
+                    </td>
+                 </tr>
+                    <tr>
+                        <td colspan="2" style="height: 20px; vertical-align: bottom;">Payment Mode: {{users_detail.FeesData.dataValues.payment_mode}}</td>
+                        <td style="height: 20px; vertical-align: bottom; text-align: right;">Signature</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+
+</html>

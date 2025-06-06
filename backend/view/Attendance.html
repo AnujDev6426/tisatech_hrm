@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+</head>
+
+<body>
+  <div style="border: 1px solid black; width: 880px">
+    <style>
+      .date {
+        border-left: 1px solid black;
+        width: 20px;
+        text-align: center;
+      }
+
+      #stName {
+        border-left: 1px solid black;
+        text-align: center;
+        width: 150px;
+      }
+
+      .head {
+        border: 1px solid black;
+      }
+    </style>
+
+    <table style="
+          border: 1px solid #000;
+          max-width: 880px;
+          width: 100%;
+          margin: auto;
+          font-family: Arial, Helvetica, sans-serif;
+          font-size: 14px;
+        " cellspacing="5">
+      <tr>
+        <td style="vertical-align: top; width: 10%">
+          <img src="https://tisatech.in/assets/images/logo-b.png" width="75px" alt="" style="margin-top: 10px" />
+        </td>
+        <td style="
+              text-align: center;
+              width: 70%;
+              font-size: 10px;
+              line-height: 1.2;
+            ">
+          <strong style="display: block; font-size: 10px">Attendance Sheet</strong>
+          <strong style="font-size: 10px; display: block">
+            TISA - TRAINING INSTITUTE FOR SOFTWARE & APPLICATIONS
+          </strong>
+          <span style="font-size: 9px; display: block">
+            <span>1<sup>st</sup> FLOOR</span>, 70-71, OPPOSITE HOTEL NARAYAN
+            PALACE, PATEL NAGAR, GOVINDPURA, JAIPUR, RAJ. 302012
+          </span>
+          <div style="text-align: center; margin-top: 5px; line-height: 1.2">
+            <span style="display: inline-block; margin-right: 10px">
+              <img src="https://cdn-icons-png.flaticon.com/128/1006/1006771.png"
+                style="height: 10px; width: 10px; vertical-align: middle" />
+              <span>www.tisatech.in</span>
+            </span>
+            <span style="display: inline-block; margin-right: 10px">
+              <img src="https://cdn-icons-png.flaticon.com/128/542/542689.png"
+                style="height: 10px; width: 10px; vertical-align: middle" />
+              <span>contact@tisatech.in</span>
+            </span>
+            <span style="display: inline-block">
+              <img src="https://cdn-icons-png.flaticon.com/128/483/483947.png"
+                style="height: 10px; width: 10px; vertical-align: middle" />
+              <span>+91 9828080898</span>
+            </span>
+          </div>
+        </td>
+
+        <td style="width: 20%; text-align: right; vertical-align: top">
+          <span style="font-size: 7px; display: block">ISO 9001:2015 Registered</span>
+          <div style="
+                display: inline-block;
+                vertical-align: top;
+                margin-top: 2px;
+              ">
+            <img src="https://www.taxaj.com/files/Images/ISO-e1538996534469.png"
+              style="height: 30px; margin-right: 5px" />
+          </div>
+          <div style="
+                display: inline-block;
+                vertical-align: top;
+                margin-top: 2px;
+              ">
+            <img src="https://3.imimg.com/data3/VI/YK/MY-2425404/jas-anz-certification-services-1000x1000.jpeg"
+              style="height: 30px" />
+          </div>
+        </td>
+      </tr>
+
+      <tr>
+        <td colspan="3">
+          <table width="100%" style="border-collapse: collapse">
+            <tr>
+              <!-- Left Cell -->
+              <td style="
+                    width: 40%;
+                    font-size: 10px;
+                    text-align: left;
+                    vertical-align: top;
+                    padding: 5px;
+                  ">
+                <b>Batch.</b>:TISA{{batch_detail.batchData.dataValues.batch_code}}
+                <br />
+              </td>
+              <td style="
+                    width: 10%;
+                    font-size: 10px;
+                    text-align: center;
+                    vertical-align: center;
+                    padding: 5px;
+                  ">
+                <b>Faculty</b>:
+                <table>
+                  {{#each batch_detail.faculty}}
+                  <tr>
+                    <td>{{this.dataValues.username}}</td>
+                  </tr>
+                  {{/each}}
+                </table>
+
+              </td>
+              <!-- Right Cell -->
+              <td style="
+                    width: 40%;
+                    font-size: 10px;
+                    text-align: right;
+                    vertical-align: top;
+                    padding: 5px;
+                  ">
+                <b>Month</b>: {{batch_detail.date}}
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+
+    <!----------- Attendance Sheet & Remark Section ------------>
+
+    <style>
+      * {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
+          sans-serif;
+      }
+
+      #t2 {
+        border-collapse: collapse;
+        width: 880px;
+        font-size: 10px;
+        margin: auto;
+      }
+
+      #t3 {
+        border-collapse: collapse;
+        width: 880px;
+        font-size: 10px;
+        margin: auto;
+      }
+
+      #t2 th,
+      #t2 td {
+        border: 1px solid black;
+        padding: 4px;
+        text-align: center;
+      }
+
+      #t3 thead tr th {
+        text-align: center;
+      }
+
+      #t3 th,
+      #t3 td {
+        border: 1px solid black;
+        padding: 4px;
+        text-align: center;
+      }
+
+      #sn {
+        width: 8px;
+      }
+
+      #t-3-h {
+        font-size: 12px;
+        width: 40px;
+      }
+
+      #t-3-d {
+        font-size: 12px;
+        width: 40px;
+      }
+
+      #t3 {
+        border-collapse: collapse;
+        width: 880px;
+        font-size: 10px;
+        margin: auto;
+      }
+
+      #t3 th,
+      #t3 td {
+        border: 1px solid black;
+        padding: 4px;
+        text-align: center;
+      }
+
+      #t3 thead tr th {
+        text-align: center;
+      }
+    </style>
+
+    <table id="t2">
+      <thead>
+        <tr>
+          <th>Sr No.</th>
+          <th>Student Name</th>
+          {{#each batch_detail.dates}}
+          <th>{{this}}</th>
+          {{/each}}
+        </tr>
+      </thead>
+      <tbody>
+        {{#each batch_detail.studentArray}}
+        <tr>
+          <td>{{srNo}}</td>
+          <td>{{name}}</td>
+          {{#each ../batch_detail.dates}}
+          <td></td>
+          {{/each}}
+        </tr>
+        {{/each}}
+
+      </tbody>
+    </table>
+    <br />
+    <h4 style="text-align: center;">(For management Authority)</h4>
+
+    <table id="t3">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>St. Name</th>
+          <th>Remark</th>
+          <th>HR</th>
+          <th>Director</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+</body>
+
+</html>
